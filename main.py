@@ -304,7 +304,7 @@ Root: {has_root}"""
     def run_cmd(self, cmd):
         adb = self.get_adb()
         fastboot = self.get_fastboot()
-        # Replace "adb" and "fastboot" with local paths
+        
         if cmd and cmd[0] == "adb":
             cmd[0] = adb
         elif cmd and cmd[0] == "fastboot":
@@ -353,10 +353,10 @@ Root: {has_root}"""
 
     def enter_directory(self, item):
         if item is None:
-            return  # Nie kliknięto na żaden element — np. kliknięcie w puste tło
+            return  
 
         if not item.text().endswith("/"):
-            return  # Kliknięto na plik — ignoruj
+            return  
 
         current_path = self.ui.line_path.text().rstrip("/")
         new_path = f"{current_path}/{item.text().rstrip('/')}"
@@ -424,7 +424,7 @@ Root: {has_root}"""
             scrcpy_path,
             "--window-borderless",
             "--max-size=650",
-            "--always-on-top"  # opcjonalnie
+            "--always-on-top"  
         ], cwd=scrcpy_dir, startupinfo=startupinfo)
         pid = proc.pid
 
@@ -460,7 +460,7 @@ Root: {has_root}"""
 
     def show_context_menu(self, position):
         adb = self.get_adb()
-        self.ui.list_files.blockSignals(True)  # <-- BLOKUJ kliknięcia
+        self.ui.list_files.blockSignals(True) 
 
         menu = QtWidgets.QMenu()
 
@@ -482,11 +482,11 @@ Root: {has_root}"""
         action_delete = menu.addAction("🗑️ Delete")
         
         menu.addSeparator()
-        action_info = menu.addAction("ℹ️ Info device")  # <-- NOWE!
+        action_info = menu.addAction("ℹ️ Info device")
 
         selected_action = menu.exec_(self.ui.list_files.viewport().mapToGlobal(position))
 
-        self.ui.list_files.blockSignals(False)  # <-- ODBLOKUJ kliknięcia
+        self.ui.list_files.blockSignals(False) 
 
         if selected_action == action_new_folder:
             name, ok = QtWidgets.QInputDialog.getText(self, "New folder", "Name folder:")
@@ -645,7 +645,7 @@ Root: {has_root}"""
         if source == self.ui.list_files:
             if event.type() == QtCore.QEvent.MouseButtonPress:
                 if event.button() == QtCore.Qt.RightButton:
-                    return True  # BLOKUJ klik prawym!
+                    return True  
         return super().eventFilter(source, event)
     
     def show_file_info(self, remote_path):
@@ -714,7 +714,7 @@ Root: {has_root}"""
         cmd = self.terminal_input.text().strip()
         if cmd and hasattr(self, "adb_process") and self.adb_process and self.adb_process.stdin:
             try:
-                # Wyświetl wpisaną komendę z promptem jak w terminalu
+               
                 self.terminal_output.append(f"begonia:/ # {cmd}")
                 self.adb_process.stdin.write(cmd + "\n")
                 self.adb_process.stdin.flush()
