@@ -45,21 +45,19 @@ Works on both internal storage and system partitions.
 
 ## 💻 Terminal / Console
 
-Every command executed via ADB or Fastboot is displayed in a styled output console:
+The built-in terminal gives direct access to the ADB shell environment.
 
-- Logs `adb shell`, `adb pull`, `fastboot flash`, etc.
-- Instant feedback from the connected device
-- Color-coded output:
-  - ✅ Green: Success
-  - ⚠️ Yellow: Warnings
-  - ❌ Red: Errors
-  - 📘 Blue: System Info
+- Executes commands like ls, cd, cat, pm list, and more
+- Direct interaction with the device via adb shell
+- No external cmd windows – everything happens inside the app
+- Ideal for debugging, quick inspections, and advanced control
 
 ---
 
 ## 🚀 Requirements
 
 - Windows 10 or 11
+- Linux coming soon
 - ADB/Fastboot drivers installed (or device in Fastboot mode)
 
 ---
