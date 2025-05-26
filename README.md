@@ -1,4 +1,4 @@
- # 🔥 Zdartix Flash Tool
+# 🔥 Zdartix Flash Tool
 
 **Zdartix Flash Tool** is a lightweight GUI-based Android flashing tool using ADB and Fastboot.  
 No global installation required – everything runs locally from the `platform-tools` folder.
@@ -49,10 +49,10 @@ Every command executed via ADB or Fastboot is displayed in a styled output conso
 
 - Logs `adb shell`, `adb pull`, `fastboot flash`, etc.
 - Instant feedback from the connected device
-- Color-coded output:  
-  - ✅ Green: Success  
-  - ⚠️ Yellow: Warnings  
-  - ❌ Red: Errors  
+- Color-coded output:
+  - ✅ Green: Success
+  - ⚠️ Yellow: Warnings
+  - ❌ Red: Errors
   - 📘 Blue: System Info
 
 ---
@@ -71,11 +71,20 @@ See [LICENSE](LICENSE).
 
 ---
 
+## 📥 Installation
+
+1. Download the latest installer from the [Releases](https://github.com/Zdartix/Zdartix-Flash-Tool/releases) section.
+2. Run the `.exe` file.
+3. Follow the setup wizard.
+4. Done – launch from desktop shortcut or Start Menu! ✅
+
+...
+
 ## 👨‍💻 Author
 
 **Zdartix**  
 📧 contact@zdartix.pl  
-📍 Poland  
+📍 Poland
 
 ---
 
@@ -90,7 +99,7 @@ Upcoming features: `.zip` ROM flashing, automatic updates, more advanced tools.
 
 This project uses:
 
-- [**platform-tools** (ADB & Fastboot)](https://developer.android.com/studio/releases/platform-tools) – official tools by Google for Android  
+- [**platform-tools** (ADB & Fastboot)](https://developer.android.com/studio/releases/platform-tools) – official tools by Google for Android
 - [**scrcpy**](https://github.com/Genymobile/scrcpy) – an amazing open-source Android display/remote control tool
 
 Huge thanks to the creators of these tools – without them, this project wouldn't exist. ❤️
