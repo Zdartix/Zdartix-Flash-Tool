@@ -37,11 +37,11 @@ class FlashApp(QtWidgets.QWidget):
         self.btn_send_terminal = self.ui.btn_send_terminal
         self.btn_send_terminal.clicked.connect(self.start_terminal)
 
-        # Layout poziomy na górze pod tabami
+        
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.ui.verticalLayout.insertLayout(1, top_buttons_layout)
         
-        # Przycisk Backup Partycji
+        
         self.btn_backup_partition = QPushButton("📦 Partition backup")
         top_buttons_layout.addWidget(self.btn_backup_partition)
         self.btn_backup_partition.clicked.connect(self.open_backup_window)
