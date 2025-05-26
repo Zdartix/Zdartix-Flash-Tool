@@ -83,7 +83,7 @@ See [LICENSE](LICENSE).
 ## 👨‍💻 Author
 
 **Zdartix**  
-📧 contact@zdartix.pl  
+📧 kontakt@zdartix.pl  
 📍 Poland
 
 ---
