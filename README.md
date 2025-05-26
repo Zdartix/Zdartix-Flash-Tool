@@ -78,7 +78,7 @@ See [LICENSE](LICENSE).
 3. Follow the setup wizard.
 4. Done – launch from desktop shortcut or Start Menu! ✅
 
-...
+---
 
 ## 👨‍💻 Author
 
