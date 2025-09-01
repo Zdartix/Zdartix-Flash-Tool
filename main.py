@@ -1,4 +1,5 @@
 import sys
+sys.path.insert(0, "./libs")
 import os
 import subprocess
 from PyQt5 import QtWidgets
@@ -17,6 +18,136 @@ from flash_window import FlashWindow
 import threading
 from PyQt5.QtCore import QObject, pyqtSignal
 import tempfile
+import pyte
+import pywinpty
+from winpty import PtyProcess
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QPlainTextEdit
+from PyQt5.QtGui import QTextCursor, QTextCharFormat, QColor
+import threading
+import pyte
+from winpty import PtyProcess
+
+ANSI_COLORS = {
+    "black": QColor("#000000"), "red": QColor("#ff5555"), "green": QColor("#50fa7b"),
+    "yellow": QColor("#f1fa8c"), "blue": QColor("#6272a4"), "magenta": QColor("#ff79c6"),
+    "cyan": QColor("#8be9fd"), "white": QColor("#bbbbbb"),
+    "brightblack": QColor("#545454"), "brightred": QColor("#ff6e6e"),
+    "brightgreen": QColor("#69ff94"), "brightyellow": QColor("#ffffa5"),
+    "brightblue": QColor("#7aa2f7"), "brightmagenta": QColor("#ff92df"),
+    "brightcyan": QColor("#a4ffff"), "brightwhite": QColor("#ffffff"),
+}
+
+def _qcolor(name, bold=False):
+    if not name:
+        return None
+    key = str(name).lower().replace(" ", "")
+    if bold and key == "yellow":
+        return ANSI_COLORS.get("brightyellow")
+    return ANSI_COLORS.get(key)
+
+class TerminalWidget(QPlainTextEdit):
+    new_output = QtCore.pyqtSignal(str)  
+
+    def __init__(self, cmd):
+        super().__init__()
+        self.setReadOnly(True)
+        self.setStyleSheet("QPlainTextEdit{background:transparent;border:none;}")
+        self.viewport().setAutoFillBackground(False)
+
+        self.screen = pyte.Screen(80, 24)
+        self.stream = pyte.Stream(self.screen)
+
+        self.pty = PtyProcess.spawn(cmd)
+
+        self.thread = threading.Thread(target=self.read_output, daemon=True)
+        self.thread.start()
+
+        self.cursor_visible = True
+        self.cursor_timer = QtCore.QTimer(self)
+        self.cursor_timer.timeout.connect(self.update_display)
+        self.cursor_timer.start(500)
+
+        self.new_output.connect(self.on_new_output)
+
+    def read_output(self):
+        while True:
+            try:
+                data = self.pty.read(2048)
+                if not data:
+                    break
+                text = data.decode("utf-8", errors="replace") if isinstance(data, (bytes, bytearray)) else data
+                self.stream.feed(text)
+                self.new_output.emit("")  
+            except Exception:
+                break
+
+    def _render(self, draw_cursor: bool):
+        self.setUpdatesEnabled(False)
+        self.clear()
+
+        doc_cur = QTextCursor(self.document())
+        rows, cols = self.screen.lines, self.screen.columns
+
+        for y in range(rows):
+            line = self.screen.buffer[y]
+            for x in range(cols):
+                cell = line[x]
+                ch = cell.data or " "
+
+                fmt = QTextCharFormat()
+
+                fg = _qcolor(cell.fg, getattr(cell, "bold", False))
+                if fg is not None:
+                    fmt.setForeground(fg)
+                if cell.bg:
+                    bg = _qcolor(cell.bg)
+                    if bg is not None:
+                        fmt.setBackground(bg)
+
+                if draw_cursor and y == self.screen.cursor.y and x == self.screen.cursor.x:
+                    doc_cur.insertText("▏", fmt)
+                else:
+                    doc_cur.insertText(ch, fmt)
+
+            if y != rows - 1:
+                doc_cur.insertBlock()
+
+        self.setTextCursor(doc_cur)
+        self.ensureCursorVisible()
+        self.setUpdatesEnabled(True)
+
+    def on_new_output(self, _):
+        self._render(draw_cursor=True)
+
+    def update_display(self):
+        self.cursor_visible = not self.cursor_visible
+        self._render(draw_cursor=self.cursor_visible)
+
+    def keyPressEvent(self, event):
+        text = event.text()
+        if text:
+            self.pty.write(text)
+            return
+
+        key = event.key()
+        if key == 16777220:      
+            self.pty.write("\r")  
+            return
+        if key == 16777219:      
+            self.pty.write("\b")
+            return
+
+        if key == 16777234: self.pty.write("\x1b[D"); return  # Left
+        if key == 16777236: self.pty.write("\x1b[C"); return  # Right
+        if key == 16777235: self.pty.write("\x1b[A"); return  # Up
+        if key == 16777237: self.pty.write("\x1b[B"); return  # Down
+
+        super().keyPressEvent(event)
+
+
 
 
 
@@ -32,10 +163,12 @@ class FlashApp(QtWidgets.QWidget):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.terminal_input = self.ui.terminal_input
-        self.terminal_output = self.ui.terminal_output
-        self.btn_send_terminal = self.ui.btn_send_terminal
-        self.btn_send_terminal.clicked.connect(self.start_terminal)
+        self.terminal = TerminalWidget([self.get_adb(), "shell"])
+        self.ui.verticalLayout_terminal.insertWidget(0, self.terminal)
+
+
+        # self.btn_send_terminal = self.ui.btn_send_terminal
+        # self.btn_send_terminal.clicked.connect(self.start_terminal)
 
         
         top_buttons_layout = QtWidgets.QHBoxLayout()
@@ -146,8 +279,8 @@ class FlashApp(QtWidgets.QWidget):
         self.ui.list_files.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.list_files.customContextMenuRequested.connect(self.show_context_menu)
 
-        self.ui.btn_send_terminal.setText("Launch Terminal")
-        self.ui.btn_send_terminal.clicked.connect(self.start_terminal)
+        # self.ui.btn_send_terminal.setText("Launch Terminal")
+        # self.ui.btn_send_terminal.clicked.connect(self.start_terminal)
 
         # === OPTYMALIZACJA === 
         self.signals = Signals()
@@ -247,6 +380,11 @@ Root: {has_root}"""
         thread.start()
 
     def _do_backup(self):
+
+        folder = QFileDialog.getExistingDirectory(self, "Select backup folder", "")
+        if not folder:
+            return
+        
         adb = self.get_adb()
         partitions = []
         if self.cb_system.isChecked():
@@ -265,10 +403,8 @@ Root: {has_root}"""
         if not partitions:
             self.signals.show_message.emit("No choice", "Select at least one partition to backup.")
             return
+        
 
-        folder = QFileDialog.getExistingDirectory(self, "Select backup folder")
-        if not folder:
-            return
 
         for part in partitions:
             local_path = os.path.join(folder, f"{part}.img")
@@ -666,61 +802,31 @@ Root: {has_root}"""
      except Exception as e:
          QMessageBox.critical(self, "Error", f"Unable to retrieve information:\n{e}")
       
-    def start_terminal(self):
-        adb = self.get_adb()
-        if hasattr(self, "adb_process") and self.adb_process and self.adb_process.poll() is None:
-            return  
-    
-        cb_root = self.findChild(QtWidgets.QCheckBox, "cb_terminal_root")
-        shell_cmd = [adb, "shell"]
-        if cb_root and cb_root.isChecked():
-            shell_cmd = [adb, "shell", "su", "-c", "sh"]
-    
-        try:
-            self.adb_process = subprocess.Popen(
-                shell_cmd,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                bufsize=1
-            )
-        except Exception as e:
-            self.signals.show_message.emit("Error", f"Failed to start terminal:\n{e}")
-            return
-    
-        def read_terminal_output():
-            while self.adb_process.poll() is None:
-                try:
-                    line = self.adb_process.stdout.readline()
-                    if line:
-                        self.signals.append_text.emit(line.strip())
-                except Exception as e:
-                    self.signals.append_text.emit(f"❌ Terminal error: {e}")
-                    break
-    
-        self.terminal_thread = threading.Thread(target=read_terminal_output, daemon=True)
-        self.terminal_thread.start()
-    
-        try:
-            self.ui.terminal_input.returnPressed.disconnect()
-        except:
-            pass
-    
-        self.terminal_input.returnPressed.connect(self.send_terminal_command)
-        self.ui.btn_send_terminal.setEnabled(False)
-      
-    def send_terminal_command(self):
-        cmd = self.terminal_input.text().strip()
-        if cmd and hasattr(self, "adb_process") and self.adb_process and self.adb_process.stdin:
-            try:
-               
-                self.terminal_output.append(f"begonia:/ # {cmd}")
-                self.adb_process.stdin.write(cmd + "\n")
-                self.adb_process.stdin.flush()
-            except Exception as e:
-                self.signals.append_text.emit(f"❌ Failed to send command: {e}")
-        self.terminal_input.clear()
+    #  def start_terminal(self):
+    #      self.ui.btn_send_terminal.setEnabled(False)
+    #      self.terminal_input.setEnabled(True)
+     
+    #      adb_cmd = f"{self.get_adb()} shell"
+    #      self.pty_proc = PtyProcess.spawn(adb_cmd)
+     
+    #      def read_output():
+    #          while True:
+    #              try:
+    #                  data = self.pty_proc.read(1024)
+    #                  if data:
+    #                      self.signals.append_text.emit(data)  # zamiast append bezpośrednio
+    #              except Exception:
+    #                  break
+     
+    #      self.terminal_thread = threading.Thread(target=read_output, daemon=True)
+    #      self.terminal_thread.start()
+     
+    #      self.terminal_input.returnPressed.connect(self.send_terminal_command)
+     
+    #  def safe_append_text(self, text):
+    #      self.terminal_output.moveCursor(QtGui.QTextCursor.End)
+    #      self.terminal_output.insertPlainText(text)
+
     
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

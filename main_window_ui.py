@@ -86,16 +86,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_terminal = QtWidgets.QVBoxLayout(self.tab_terminal)
         self.verticalLayout_terminal.setObjectName("verticalLayout_terminal")
         
-        self.terminal_output = QtWidgets.QTextEdit(self.tab_terminal)
-        self.terminal_output.setReadOnly(True)
-        self.verticalLayout_terminal.addWidget(self.terminal_output)
+        # self.terminal_input = QtWidgets.QLineEdit(self.tab_terminal)
+        # self.verticalLayout_terminal.addWidget(self.terminal_input)
         
-        self.terminal_input = QtWidgets.QLineEdit(self.tab_terminal)
-        self.verticalLayout_terminal.addWidget(self.terminal_input)
-        
-        self.btn_send_terminal = QtWidgets.QPushButton(self.tab_terminal)
-        self.btn_send_terminal.setText("Wyślij komendę")
-        self.verticalLayout_terminal.addWidget(self.btn_send_terminal)
+        # self.btn_send_terminal = QtWidgets.QPushButton(self.tab_terminal)
+        # self.btn_send_terminal.setText("Wyślij komendę")
+        # self.verticalLayout_terminal.addWidget(self.btn_send_terminal)
         
         self.tabWidget.addTab(self.tab_terminal, "")
         
