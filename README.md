@@ -104,3 +104,9 @@ This project uses:
 - [**scrcpy**](https://github.com/Genymobile/scrcpy) – an amazing open-source Android display/remote control tool
 
 Huge thanks to the creators of these tools – without them, this project wouldn't exist. ❤️
+
+---
+
+## 🐍 Built With
+
+This application was built **100% with Python**.
