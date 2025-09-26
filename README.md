@@ -4,14 +4,11 @@
 No global installation required – everything runs locally from the `platform-tools` folder.
 
 <p align="center">
-  <img src="flash-tool-github1.png" alt="Flashing UI" width="250"/>
-  <img src="flash-tool-github2.png" alt="File Explorer" width="250"/>
-  <img src="flash-tool-github3.png" alt="Settings" width="250"/>
+  <img src="flash-tool-github1.png" alt="Screen1" width="280"/>
+  <img src="flash-tool-github2.png" alt="Screen2" width="280"/>
+  <img src="flash-tool-github3.png" alt="Screen3" width="280"/>
 </p>
 
-<p align="center">
-  <b>Flashing UI</b> &nbsp; | &nbsp; <b>File Explorer</b> &nbsp; | &nbsp; <b>Settings</b>
-</p>
 
 ## ✨ Main Features
 
