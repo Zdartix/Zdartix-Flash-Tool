@@ -3,10 +3,15 @@
 **Zdartix Flash Tool** is a lightweight GUI-based Android flashing tool using ADB and Fastboot.  
 No global installation required – everything runs locally from the `platform-tools` folder.
 
-| ![Screen1](flash-tool-github1.png) | ![Screen2](flash-tool-github2.png) | ![Screen3](flash-tool-github3.png) |
-|:---:|:---:|:---:|
-| Flashing UI | File Explorer | Settings |
+<p align="center">
+  <img src="flash-tool-github1.png" alt="Flashing UI" width="250"/>
+  <img src="flash-tool-github2.png" alt="File Explorer" width="250"/>
+  <img src="flash-tool-github3.png" alt="Settings" width="250"/>
+</p>
 
+<p align="center">
+  <b>Flashing UI</b> &nbsp; | &nbsp; <b>File Explorer</b> &nbsp; | &nbsp; <b>Settings</b>
+</p>
 
 ## ✨ Main Features
 
