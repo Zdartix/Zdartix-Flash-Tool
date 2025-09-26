@@ -4,9 +4,9 @@
 No global installation required – everything runs locally from the `platform-tools` folder.
 
 <p align="center">
-  <img src="flash-tool-github1.png" alt="Screen1" width="280"/>
-  <img src="flash-tool-github2.png" alt="Screen2" width="280"/>
-  <img src="flash-tool-github3.png" alt="Screen3" width="280"/>
+  <img src="docs/flash-tool-github1.png" width="280"/>
+  <img src="docs/flash-tool-github2.png" width="280"/>
+  <img src="docs/flash-tool-github3.png" width="280"/>
 </p>
 
 
