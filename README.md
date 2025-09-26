@@ -6,7 +6,7 @@ No global installation required – everything runs locally from the `platform-t
 | ![Screen1](flash-tool-github1.png) | ![Screen2](flash-tool-github2.png) | ![Screen3](flash-tool-github3.png) |
 |:---:|:---:|:---:|
 | Flashing UI | File Explorer | Settings |
----
+
 
 ## ✨ Main Features
 
