@@ -1,7 +1,44 @@
-Flash Tool - Proprietary License
+==============================
+FLASH TOOL LICENSE AGREEMENT
+==============================
+
 Copyright (c) 2025 Krystian Kurpioch. All Rights Reserved.
 
-This software and its source code are proprietary and confidential.
-Unauthorized use, reproduction, modification, or distribution of this software 
-is strictly prohibited. This software may not be sold or redistributed 
-without the express written permission of the author.
+This software and its source code, excluding third-party components listed below,
+are proprietary and confidential. Unauthorized copying, modification, distribution,
+reselling, or claiming authorship of this software, in whole or in part, is strictly prohibited.
+
+------------------------------------------
+Files and folders covered by this license:
+------------------------------------------
+- /libs/                       (internal libraries created by the author)
+- /flash_tool/                 (main source code and project logic)
+- /ico/                        (icons created by the author)
+- /flash.exe                   (compiled binary)
+- All images, miniatures, and logos included with this project
+
+------------------------------------------
+Third-party components (excluded):
+------------------------------------------
+- /platform-tools/             (Google Android SDK - original license applies)
+- /scrcpy/                     (Genymobile - Apache License 2.0)
+- /adb.exe / fastboot.exe      (Google - original license applies)
+- Any other included software or libraries developed by third parties
+
+These excluded components remain under their respective licenses and copyrights.
+
+------------------------------------------
+License summary:
+------------------------------------------
+- You may NOT sell, modify, distribute, or share this software.
+- You may NOT claim authorship or ownership.
+- You may use this software only for personal, non-commercial purposes.
+- Redistribution or resale in any form is forbidden without written permission.
+
+------------------------------------------
+Contact:
+------------------------------------------
+Author: Krystian Kurpioch  
+Email: kontakt@zdartix.pl
+------------------------------------------
+
